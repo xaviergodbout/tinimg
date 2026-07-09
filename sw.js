@@ -1,4 +1,4 @@
-const CACHE_NAME = "tinimg-v2";
+const CACHE_NAME = "tinimg-v5";
 const APP_ASSETS = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const APP_ASSETS = [
   "./js/app.js",
   "./manifest.webmanifest",
   "./assets/icons/favicon.svg",
+  "./assets/icons/icon.svg",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png"
 ];

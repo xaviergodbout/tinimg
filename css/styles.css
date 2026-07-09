@@ -73,13 +73,17 @@
 
     .brand-mark {
       display: grid;
-      width: 42px;
+      width: 56px;
       height: 42px;
       place-items: center;
-      border-radius: var(--radius);
-      background: var(--ink);
       color: #ffffff;
-      box-shadow: var(--shadow);
+    }
+
+    .brand-mark img {
+      display: block;
+      width: 56px;
+      height: 42px;
+      object-fit: contain;
     }
 
     .brand h1 {
@@ -715,10 +719,7 @@
     }
 
     .brand-mark {
-      border: 1px solid var(--line);
-      background: #18181b;
       color: #f4f4f5;
-      box-shadow: none;
     }
 
     .brand h1 {
