@@ -1,0 +1,168 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090b">
+  <meta name="description" content="A local browser-based image compressor and converter.">
+  <title>tinimg</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none">
+            <path d="M5 7.5C5 6.12 6.12 5 7.5 5h9C17.88 5 19 6.12 19 7.5v9c0 1.38-1.12 2.5-2.5 2.5h-9A2.5 2.5 0 0 1 5 16.5v-9Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="m8 15 3.1-3.3 2.1 2.1 1.2-1.3L17 15H8Z" fill="currentColor"/>
+            <path d="M9 9.25h.01" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>tinimg</h1>
+          <small>Local image compressor</small>
+        </div>
+      </div>
+    </header>
+
+    <section class="split">
+      <section class="half">
+        <h2 class="half-title">INPUT</h2>
+        <div class="panel" id="inputPanel">
+          <div class="panel-inner">
+            <div class="input-setup">
+              <label class="dropzone" id="dropzone" for="fileInput">
+                <input class="file-input" id="fileInput" type="file" accept="image/*,.webp,.jpg,.jpeg,.png,.gif,.bmp,.tif,.tiff,.heic,.heif" multiple>
+                <span>
+                  <svg class="drop-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 15V4m0 0 4 4m-4-4-4 4M5 16.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 13h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                  </svg>
+                  <strong>Drop your images here</strong>
+                  <span>or click to browse</span>
+                </span>
+              </label>
+
+              <div class="options">
+                <div class="field goal-field">
+                  <label for="targetSize">Goal size per image</label>
+                  <div class="target-inputs">
+                    <input id="targetSize" type="number" min="1" step="0.1" value="500" inputmode="decimal">
+                    <select id="targetUnit" aria-label="Goal size unit">
+                      <option value="1024">KB</option>
+                      <option value="1048576">MB</option>
+                      <option value="percent">%</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="option-title">Output format</div>
+                  <div class="format-grid" id="formatGrid">
+                    <label class="format-choice" title="Small photos and broad compatibility">
+                      <input type="radio" name="format" value="image/jpeg" checked>
+                      <span>JPG</span>
+                    </label>
+                    <label class="format-choice" title="Transparent images and exact pixels">
+                      <input type="radio" name="format" value="image/png">
+                      <span>PNG</span>
+                    </label>
+                    <label class="format-choice" title="Good compression in modern browsers">
+                      <input type="radio" name="format" value="image/webp">
+                      <span>WEBP</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="support-note" id="supportNote">Checking browser output support...</p>
+            <div class="list input-list" id="inputRows"></div>
+
+            <div class="actions">
+              <button class="button primary" id="compressBtn" type="button" disabled>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M8 7h8M7 12h10M9 17h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Compress all
+              </button>
+              <button class="button" id="inputClearBtn" type="button" disabled>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 7h12m-9 0V5h6v2m-7 3v8m4-8v8m4-8v8M8 7l.6 13h6.8L16 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="half">
+        <h2 class="half-title">OUTPUT</h2>
+        <div class="panel" id="outputPanel">
+          <div class="panel-inner">
+            <div class="output-stage">
+              <div class="empty-output" id="outputEmpty">
+                <div>
+                  <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <rect x="23" y="24" width="74" height="58" rx="8" stroke="currentColor" stroke-width="3"/>
+                    <path d="M39 68 54 52l12 12 8-8 14 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M60 92V74m0 18 7-7m-7 7-7-7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <strong>Waiting for output</strong>
+                </div>
+              </div>
+              <div class="list output-list" id="outputRows"></div>
+            </div>
+
+            <div class="actions output-actions">
+              <button class="button" id="downloadSelectedBtn" type="button" disabled hidden>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 4v10m0 0 4-4m-4 4-4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span id="downloadSelectedLabel">Download selected (0)</span>
+              </button>
+              <button class="button success" id="downloadAllBtn" type="button" disabled>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 4v10m0 0 4-4m-4 4-4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download all
+              </button>
+              <button class="button" id="outputClearBtn" type="button" disabled>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 7h12m-9 0V5h6v2m-7 3v8m4-8v8m4-8v8M8 7l.6 13h6.8L16 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <dialog class="download-dialog" id="downloadDialog">
+      <form class="download-card" method="dialog">
+        <div class="dialog-head">
+          <div>
+            <h2>Download size</h2>
+            <p id="downloadDialogMeta">Choose the dimensions for this download.</p>
+          </div>
+          <button class="dialog-close" type="button" id="downloadDialogClose" aria-label="Close dialog">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="download-options" id="downloadOptions"></div>
+      </form>
+    </dialog>
+  </main>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
+
