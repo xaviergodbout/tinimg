@@ -188,6 +188,16 @@
       return isInputItem(item) && (item.status === "Ready" || item.status === "Error");
     }
 
+    function compressionConcurrency(queue) {
+      if (queue.length <= 1) return 1;
+      const cores = Math.max(1, Number(navigator.hardwareConcurrency) || 4);
+      const memory = Number(navigator.deviceMemory) || 4;
+      const largestFile = Math.max(...queue.map((item) => item.file.size));
+      const coreLimit = cores >= 8 ? 3 : cores >= 4 ? 2 : 1;
+      const memoryLimit = memory >= 6 && largestFile < 30 * 1024 * 1024 ? coreLimit : Math.min(coreLimit, 2);
+      return Math.max(1, Math.min(queue.length, memoryLimit));
+    }
+
     function uniqueZipName(name, used) {
       if (!used.has(name)) {
         used.add(name);
@@ -627,25 +637,38 @@
       const mime = getSelectedMime();
       if (!supportReady) return;
       if (!encoderSupport.get(mime)) return;
-      if (queue.length === 0) return;
+      const pending = queue.filter(canCompressInput);
+      if (pending.length === 0) return;
       isWorking = true;
       render();
 
-      for (const item of queue) {
-        if (!canCompressInput(item)) continue;
-        try {
-          await compressItem(item, mime, getTargetBytes(item));
-        } catch (error) {
-          item.status = "Error";
-          item.error = error.message || "Compression failed.";
-          item.outputBlob = null;
-          item.isMoving = false;
-          render();
+      let nextIndex = 0;
+      const workerCount = compressionConcurrency(pending);
+
+      async function runWorker() {
+        while (nextIndex < pending.length) {
+          const item = pending[nextIndex];
+          nextIndex += 1;
+          if (!canCompressInput(item)) continue;
+
+          try {
+            await compressItem(item, mime, getTargetBytes(item));
+          } catch (error) {
+            item.status = "Error";
+            item.error = error.message || "Compression failed.";
+            item.outputBlob = null;
+            item.isMoving = false;
+            render();
+          }
         }
       }
 
-      isWorking = false;
-      render();
+      try {
+        await Promise.all(Array.from({ length: workerCount }, runWorker));
+      } finally {
+        isWorking = false;
+        render();
+      }
     }
 
     async function compressAll() {
