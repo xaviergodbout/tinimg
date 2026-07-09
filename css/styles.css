@@ -51,7 +51,7 @@
 
     .app {
       width: min(1320px, calc(100% - 36px));
-      min-height: 100vh;
+      min-height: 90vh;
       margin: 0 auto;
       padding: 26px 0 34px;
     }
@@ -769,7 +769,7 @@
     }
 
     .panel {
-      min-height: min(760px, calc(100vh - 122px));
+      min-height: min(760px, calc(100vh - 152px));
       border-color: var(--line);
       border-radius: 14px;
       background: rgba(15, 15, 16, 0.98);
@@ -1383,7 +1383,7 @@
     }
 
     .panel {
-      height: max(640px, calc(100vh - 132px));
+      height: max(640px, calc(100vh - 160px));
       min-height: 0;
       max-height: none;
       flex: 1 1 auto;
