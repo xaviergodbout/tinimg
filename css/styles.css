@@ -1536,3 +1536,39 @@
       }
     }
 
+    @media (min-width: 1181px) {
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .app {
+        display: grid;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        grid-template-rows: auto minmax(0, 1fr);
+        padding: 20px 0;
+      }
+
+      .topbar {
+        margin-bottom: 16px;
+      }
+
+      .split {
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .half {
+        display: grid;
+        min-height: 0;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+
+      .panel {
+        height: auto;
+        min-height: 0;
+      }
+    }
