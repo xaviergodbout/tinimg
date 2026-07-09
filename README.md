@@ -2,30 +2,6 @@
 
 tinimg is a small local image compressor/converter. It runs in your browser and does not upload files anywhere.
 
-## Use it
-
-Open `index.html` directly in Chrome, Edge, Firefox, or another modern browser.
-
-You can also host the folder on GitHub Pages. It is a static app, so no server code is needed.
-PWA install/offline support works when served over HTTPS, such as GitHub Pages, or from localhost. It will not work from a `file:///C:/.../index.html` URL.
-
-To test PWA install locally:
-
-```powershell
-python -m http.server 8080
-```
-
-Then open `http://localhost:8080/`.
-
-## Files
-
-- `index.html` - app markup
-- `css/styles.css` - app styling
-- `js/app.js` - compressor, download, and UI logic
-- `manifest.webmanifest` - PWA metadata
-- `sw.js` - offline cache service worker
-- `assets/icons/` - favicon and install icons
-
 ## What it does
 
 - Add one image or a batch of images.
